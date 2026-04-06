@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f5efe6;
+    --warm: #e8ddd0;
+    --stone: #c9b99a;
+    --bark: #7c6248;
+    --deep: #3d2e1e;
+    --gold: #b89b6a;
+    --white: #fdfaf6;
+  }
+
+  body {
+    background: var(--cream);
+    font-family: 'Jost', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(184,155,106,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(124,98,72,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .noise {
+    position: fixed;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    opacity: 0.6;
+  }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--bark);
+  }
+
+  .coupon-card {
+    background: var(--white);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 
+      0 2px 4px rgba(61,46,30,0.06),
+      0 12px 40px rgba(61,46,30,0.1),
+      0 0 0 1px rgba(184,155,106,0.2);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+    position: relative;
+  }
+
+  .coupon-top {
+    background: var(--deep);
+    padding: 36px 40px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .coupon-top::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(184,155,106,0.08);
+  }
+
+  .coupon-top::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(184,155,106,0.06);
+  }
+
+  .promo-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .discount-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .discount-amount sup {
+    font-size: 28px;
+    vertical-align: super;
+  }
+
+  .discount-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(245,239,230,0.6);
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .divider-cuts {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    background: var(--cream);
+  }
+
+  .cut {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--cream);
+    flex-shrink: 0;
+    margin-top: -10px;
+    margin-bottom: -10px;
+  }
+
+  .cut:first-child { margin-left: -10px; }
+  .cut:last-child { margin-right: -10px; }
+
+  .dashed-line {
+    flex: 1;
+    border: none;
+    border-top: 1.5px dashed rgba(184,155,106,0.25);
+    margin: 0 8px;
+  }
+
+  .coupon-bottom {
+    padding: 28px 40px 36px;
+  }
+
+  .service-info {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 4px;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .price-old {
+    font-size: 13px;
+    color: var(--stone);
+    text-decoration: line-through;
+  }
+
+  .price-new {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--bark);
+  }
+
+  .code-section {
+    background: var(--cream);
+    border-radius: 4px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border: 1px solid rgba(184,155,106,0.2);
+  }
+
+  .code-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 4px;
+  }
+
+  .code-value {
+    font-family: 'Jost', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--deep);
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid rgba(184,155,106,0.4);
+    border-radius: 3px;
+    padding: 6px 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .copy-btn:hover { background: rgba(184,155,106,0.1); }
+  .copy-btn.copied { color: #5a8a5a; border-color: #5a8a5a; }
+
+  .validity {
+    text-align: center;
+    font-size: 11px;
+    color: var(--stone);
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+  }
+
+  .whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px;
+    background: var(--deep);
+    color: var(--cream);
+    border: none;
+    border-radius: 3px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .whatsapp-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bark);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .whatsapp-btn:hover::before { transform: translateX(0); }
+  .whatsapp-btn span { position: relative; z-index: 1; }
+
+  .whatsapp-icon {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+
+  .footer p {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="container">
+  <div class="header">
+    <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="22" stroke="#7c6248" stroke-width="1"/>
+      <path d="M24 8 C18 14 14 20 14 26 C14 32 18 38 24 40 C30 38 34 32 34 26 C34 20 30 14 24 8Z" stroke="#b89b6a" stroke-width="1" fill="none"/>
+      <path d="M14 26 C18 24 21 28 24 26 C27 24 30 28 34 26" stroke="#7c6248" stroke-width="1" fill="none"/>
+    </svg>
+    <div class="brand-name">Arche Massoterapia</div>
+  </div>
+
+  <div class="coupon-card">
+    <div class="coupon-top">
+      <div class="promo-label">Oferta exclusiva</div>
+      <div class="discount-amount"><sup>R$</sup>40<sup style="font-size:20px;vertical-align:super;color:rgba(184,155,106,0.7)"> off</sup></div>
+      <div class="discount-label">na sua próxima sessão</div>
+    </div>
+
+    <div class="divider-cuts" style="display:flex;align-items:center;background:var(--white)">
+      <div class="cut"></div>
+      <hr class="dashed-line">
+      <div class="cut"></div>
+    </div>
+
+    <div class="coupon-bottom">
+      <div class="service-info">
+        <div class="service-name">Massagem Terapêutica</div>
+        <div class="price-row">
+          <span class="price-old">R$ 150,00</span>
+          <span class="price-new">R$ 110,00</span>
+        </div>
+      </div>
+
+      <div class="code-section">
+        <div>
+          <div class="code-label">Seu código</div>
+          <div class="code-value" id="couponCode">ARCHE-4827</div>
+        </div>
+        <button class="copy-btn" id="copyBtn" onclick="copyCoupon()">Copiar</button>
+      </div>
+
+      <div class="validity">Válido por 30 dias · Apresente ao agendar</div>
+
+      <a class="whatsapp-btn" id="whatsappBtn" href="#" onclick="openWhatsApp(event)">
+        <svg class="whatsapp-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span>Agendar pelo WhatsApp</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© Arche Massoterapia · Goiânia</p>
+  </div>
+</div>
+
+<script>
+  // Gera código aleatório único por sessão
+  function generateCode() {
+    const prefixes = ['ARCHE', 'RELAX', 'WELL', 'ARCHE'];
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const num = Math.floor(1000 + Math.random() * 9000);
+    return `${prefix}-${num}`;
+  }
+
+  const code = generateCode();
+  document.getElementById('couponCode').textContent = code;
+
+  function copyCoupon() {
+    const btn = document.getElementById('copyBtn');
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copiar';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function openWhatsApp(e) {
+    e.preventDefault();
+    const msg = encodeURIComponent(`Olá! Gostaria de agendar uma massagem e estou com o cupom *${code}* — R$40 off. Poderia me informar os horários disponíveis?`);
+    window.open(`https://wa.me/5562981198779?text=${msg}`, '_blank');
+  }
+</script>
+</body>
+</html>
